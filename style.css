@@ -22,31 +22,35 @@ body{
   line-height:1.6;
 }
 
-/* ===== Header：flex 讓 Logo 嚴格靠右 ===== */
+/* ===== Header：嚴格水平左右、垂直置中 ===== */
 header{
   position:sticky; top:0; z-index:4;
   background:var(--navy);
   color:#fff;
-  padding:.9rem 1.25rem;
-  box-shadow:var(--shadow);
 
-  display:flex;
-  align-items:center;
-  justify-content:space-between;  /* 左右分散：標題在左、Logo 在右 */
-  gap:1rem;
+  /* 設定固定高度 + 等量內邊距，便於視覺對齊 */
+  min-height:64px;
+  padding:0 1.25rem;
+
+  /* 重要：用 flex 垂直置中（加 !important 防舊樣式干擾） */
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  box-shadow:var(--shadow);
 }
 header h1{
   margin:0;
   font-size:clamp(1.1rem, 2.2vw + .4rem, 1.6rem);
+  line-height:1;             /* 消除額外行高帶來的視覺偏移 */
   letter-spacing:.3px;
-  line-height:1.2;
 }
 header .q-logo{
-  height:44px;                /* 可依需求 36–56 調整 */
+  height:44px;               /* 需要更貼近中線可調 40–48 */
   width:auto;
   display:block;
   object-fit:contain;
-  z-index:5;                  /* 高於 bar 背景 */
+  align-self:center;         /* 保險起見再置中一次 */
 }
 
 /* ===== 粒子畫布：僅在 header 下方 ===== */
@@ -106,5 +110,5 @@ img{
 section + section{ margin-top:1.25rem; }
 @media (max-width:640px){
   main{ margin:1rem .75rem; padding:1rem; }
-  header .q-logo{ height:36px; }
+  header .q-logo{ height:38px; }
 }
