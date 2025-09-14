@@ -4,32 +4,42 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>My Queen’s Student Page</title>
-    <link rel="stylesheet" href="style.css"/> <!-- do not change this line -->
+    <link rel="stylesheet" href="style.css"/> <!-- 請保留這行 -->
   </head>
   <body>
     <header>
-      <h1>Welcome to Hengyi's Blog</h1> <!-- change this heading to your name -->
+      <h1>Welcome to Hengyi's Blog</h1> <!-- 可以改成你的名字 -->
     </header>
 
     <main>
-      <!-- ====== ABOUT SECTION (edit the text) ====== -->
-      <h2>About Me</h2>
-      <p>I am a student at the Queen’s School of Computing with interests in Photography, Blender, Economics, small form factor PCs (Mini-ITX), and East Asian Literature.<!-- replace with interests -->.</p>
+      <!-- ====== ABOUT SECTION ====== -->
+      <section>
+        <h2>About Me</h2>
+        <p>
+          I am a student at the Queen’s School of Computing with interests in 
+          Photography, Blender, Economics, small form factor PCs (Mini-ITX), and 
+          East Asian Literature.
+        </p>
 
-      <!-- ====== PHOTO (upload me.jpg to repo root, then update the src below) ====== -->
-      <img src="me.jpeg" alt="My portrait" />
+        <!-- 建議：如果你想要這張照片佔滿卡片上方，可以加 class="hero" -->
+        <img src="me.jpeg" alt="My portrait" class="hero" />
+      </section>
 
-      <!-- ====== PROJECTS/COURSES (add or rename items to courses instead of projects) ====== -->
-      <h2>Projects</h2>
-      <ul>
-        <li>Project One — one sentence description.</li>
-        <li>Project Two — coming soon.</li>
-      </ul>
+      <!-- ====== PROJECTS/COURSES ====== -->
+      <section>
+        <h2>Projects</h2>
+        <ul>
+          <li>Project One — one sentence description.</li>
+          <li>Project Two — coming soon.</li>
+        </ul>
+      </section>
 
-      <!-- ====== CONTACT (update your links) ====== -->
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:hengyi.dong@queensu.ca">hengyi.dong@queensu.ca</a></p>
-      <p>LinkedIn: <a href="#">To be Announced</a></p>
+      <!-- ====== CONTACT ====== -->
+      <section>
+        <h2>Contact</h2>
+        <p>Email: <a href="mailto:hengyi.dong@queensu.ca">hengyi.dong@queensu.ca</a></p>
+        <p>LinkedIn: <a href="#">To be Announced</a></p>
+      </section>
     </main>
   </body>
 </html>
