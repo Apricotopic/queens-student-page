@@ -22,35 +22,33 @@ body{
   line-height:1.6;
 }
 
-/* ===== Header：嚴格水平左右、垂直置中 ===== */
+/* ===== Header：左右對齊、垂直置中 ===== */
 header{
   position:sticky; top:0; z-index:4;
   background:var(--navy);
   color:#fff;
 
-  /* 設定固定高度 + 等量內邊距，便於視覺對齊 */
   min-height:64px;
   padding:0 1.25rem;
 
-  /* 重要：用 flex 垂直置中（加 !important 防舊樣式干擾） */
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
+  display:flex;
+  align-items:center;            /* 垂直置中 */
+  justify-content:space-between; /* 左右分散：標題左、logo 右 */
   box-shadow:var(--shadow);
 }
 header h1{
   margin:0;
   font-size:clamp(1.1rem, 2.2vw + .4rem, 1.6rem);
-  line-height:1;             /* 消除額外行高帶來的視覺偏移 */
+  line-height:1;
   letter-spacing:.3px;
 }
 header .q-logo{
-  height:44px;               /* 需要更貼近中線可調 40–48 */
+  height:44px;
   width:auto;
   display:block;
   object-fit:contain;
-  align-self:center;         /* 保險起見再置中一次 */
+  margin:0;                      /* 關鍵：不要吃到通用 img 的 margin:auto */
+  align-self:center;
 }
 
 /* ===== 粒子畫布：僅在 header 下方 ===== */
@@ -92,13 +90,13 @@ a{ color:var(--blue); text-decoration:none; }
 a:hover,a:focus{ text-decoration:underline; }
 a:active{ color:#001a42; }
 
-/* ===== 圖片保持原比例，不裁切 ===== */
-img{
+/* ===== 圖片保持原比例（排除 header logo） ===== */
+img:not(.q-logo){
   width:auto;
   max-width:100%;
   height:auto;
   display:block;
-  margin:1rem auto;
+  margin:1rem auto;              /* 只讓內容圖片置中 */
   border-radius:12px;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
   aspect-ratio:auto !important;
