@@ -10,6 +10,24 @@
   --shadow: 0 8px 28px rgba(0,0,0,.08);
 }
 
+/* 背景粒子 Canvas 置底 */
+#bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none; /* 不遮擋點擊 */
+}
+
+/* 讓內容浮在畫布之上 */
+header, main { position: relative; z-index: 1; }
+
+/* 使用者偏好減少動效時停用動畫（無障礙） */
+@media (prefers-reduced-motion: reduce) {
+  #bg { display: none; }
+}
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
