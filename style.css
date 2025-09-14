@@ -2,14 +2,16 @@
 :root{
   --red:#aa1e22;
   --gold:#f2a900;          /* Queen's Yellow */
-  --navy:#141c3f;          /* Header 要求的顏色 */
+  --navy:#141c3f;          /* header bar 顏色 */
   --blue:#002d72;
   --ink:#1a1a1a;
   --ink-2:#333;
   --bg:#fff;
   --card-radius:14px;
   --shadow:0 8px 28px rgba(0,0,0,.08);
-  --header-h:0px;          /* 由 JS 寫入實際 header 高度 */
+  --header-h:0px;          /* JS 寫入 header 真實高度 */
+  --logo-gap: 16px;        /* 文字與 logo 的間距 */
+  --logo-h: 44px;          /* logo 高度（可依需要 36–56 調整） */
 }
 
 *{ box-sizing:border-box; }
@@ -22,18 +24,16 @@ body{
   line-height:1.6;
 }
 
-/* ===== Header（#141c3f 並靠右放 Logo） ===== */
+/* ===== Header：navy bar + 右側 logo，logo 疊在最上層 ===== */
 header{
-  position:sticky; top:0; z-index:3;
-  background:#141c3f;      /* 指定顏色 */
+  position:sticky; top:0;
+  background:var(--navy);
   color:#fff;
   padding:.9rem 1.25rem;
+  /* 右側預留空間，避免標題被 logo 壓住 */
+  padding-right: calc(var(--logo-h) + var(--logo-gap) + 1.25rem);
   box-shadow:var(--shadow);
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
+  z-index: 4;                 /* 高於 canvas 與 main */
 }
 header h1{
   margin:0;
@@ -41,14 +41,21 @@ header h1{
   letter-spacing:.3px;
   line-height:1.2;
 }
+/* logo 絕對定位到右上，確保永遠在 bar 上面 */
 header .q-logo{
-  height:40px;             /* 視覺大小可調 32–48 */
+  position:absolute;
+  right:1.25rem;
+  top:50%;
+  transform: translateY(-50%);
+  height: var(--logo-h);
   width:auto;
   display:block;
   object-fit:contain;
+  z-index: 5;                 /* 疊在 header 之上 */
+  pointer-events: none;       /* 只作展示，避免誤點；要可點就刪掉這行 */
 }
 
-/* ===== 粒子畫布：只在 header 下方 ===== */
+/* ===== 粒子畫布：僅在 header 下方 ===== */
 #bg{
   position:fixed;
   left:0;
@@ -105,5 +112,5 @@ img{
 section + section{ margin-top:1.25rem; }
 @media (max-width:640px){
   main{ margin:1rem .75rem; padding:1rem; }
-  header .q-logo{ height:32px; }
+  :root{ --logo-h: 36px; }   /* 小螢幕自動縮小 logo */
 }
