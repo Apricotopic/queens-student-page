@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>My Queen’s Student Page</title>
     <meta name="description" content="Hengyi Dong — Queen’s School of Computing student page">
-    <link rel="stylesheet" href="style.css?v=11"/>
+    <link rel="stylesheet" href="style.css?v=12"/>
   </head>
   <body>
-    <!-- Header（固定高度 72px；logo 絕對定位在右側中線） -->
+    <!-- Header（加大字級與高度；logo 等比放大且靠右垂直置中） -->
     <header id="site-header">
       <h1>Welcome to Hengyi's Blog</h1>
       <img src="Queens_logo.jpeg" alt="Queen's University Logo" class="q-logo"/>
@@ -81,6 +81,7 @@
       function step() {
         ctx.clearRect(0, 0, W, H);
 
+        // 粒子
         ctx.fillStyle = GOLD;
         for (const p of particles) {
           p.x += p.vx; p.y += p.vy;
@@ -91,6 +92,7 @@
           ctx.fill();
         }
 
+        // 連線
         ctx.strokeStyle = GOLD;
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
