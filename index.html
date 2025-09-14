@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>My Queen’s Student Page</title>
     <meta name="description" content="Hengyi Dong — Queen’s School of Computing student page">
-    <link rel="stylesheet" href="style.css?v=5"/>
+    <link rel="stylesheet" href="style.css?v=6"/>
   </head>
   <body>
-    <!-- Header 固定在最上方，粒子不覆蓋 -->
+    <!-- Header（固定在最上方，粒子不覆蓋） -->
     <header id="site-header">
       <h1>Welcome to Hengyi's Blog</h1>
+      <!-- 右側 Logo：請確保 Queens_logo.jpeg 與本檔同層目錄 -->
+      <img src="Queens_logo.jpeg" alt="Queen's University Logo" class="q-logo" />
     </header>
 
-    <!-- 粒子背景 -->
+    <!-- 粒子背景：只在 header 下方 -->
     <canvas id="bg"></canvas>
 
     <main>
@@ -42,7 +44,7 @@
       </section>
     </main>
 
-    <!-- 粒子動畫 -->
+    <!-- 粒子動畫（Queen’s Yellow） -->
     <script>
     (() => {
       const header = document.getElementById('site-header');
@@ -50,7 +52,6 @@
       const ctx = c.getContext('2d');
       const root = document.documentElement;
 
-      // 統一使用 Queen's 黃色
       const GOLD = getComputedStyle(root).getPropertyValue('--gold').trim() || '#f2a900';
 
       let W, H, particles, maxDist, headerPx;
@@ -81,7 +82,7 @@
       function step() {
         ctx.clearRect(0, 0, W, H);
 
-        // 顆粒 = 黃色
+        // 顆粒
         ctx.fillStyle = GOLD;
         for (const p of particles) {
           p.x += p.vx; p.y += p.vy;
@@ -92,7 +93,7 @@
           ctx.fill();
         }
 
-        // 連線 = 黃色（透明度衰減）
+        // 連線
         ctx.strokeStyle = GOLD;
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
