@@ -8,15 +8,14 @@
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
-    <!-- 固定在最上方的 Header（粒子不能覆蓋這裡） -->
+    <!-- 固定在最上方的 Header（粒子不覆蓋這裡） -->
     <header id="site-header">
       <h1>Welcome to Hengyi's Blog</h1>
     </header>
 
-    <!-- 粒子背景畫布：放在 header 之後，因此不會出現在 header 上方 -->
+    <!-- 粒子背景畫布（僅在 header 下方運行） -->
     <canvas id="bg"></canvas>
 
-    <!-- 內容卡片 -->
     <main>
       <section>
         <h2>About Me</h2>
@@ -25,7 +24,8 @@
           Photography, Blender, Economics, small form factor PCs (Mini-ITX), and
           East Asian Literature.
         </p>
-        <img src="me.jpeg" alt="My portrait" class="hero" loading="lazy"/>
+        <!-- 重要：不再使用 class="hero"，避免裁切 -->
+        <img src="me.jpeg" alt="My portrait" loading="lazy"/>
       </section>
 
       <section>
@@ -43,7 +43,7 @@
       </section>
     </main>
 
-    <!-- 粒子網腳本（只在 header 下方繪製） -->
+    <!-- 粒子網腳本（畫布高度=視窗高度−header 高度） -->
     <script>
     (() => {
       const header = document.getElementById('site-header');
@@ -51,7 +51,6 @@
       const ctx = c.getContext('2d');
       const root = document.documentElement;
 
-      // 讀取主題色
       const BLUE = getComputedStyle(root).getPropertyValue('--blue').trim() || '#002d72';
       const GOLD = getComputedStyle(root).getPropertyValue('--gold').trim() || '#f2a900';
 
@@ -59,18 +58,15 @@
       const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
       function measureHeader() {
-        // 以實際渲染高度為準（避免斷行導致高度變動）
         headerPx = Math.ceil(header.getBoundingClientRect().height);
-        // 通知 CSS 設定 canvas 的 top 與高度
         root.style.setProperty('--header-h', headerPx + 'px');
       }
 
       function resize() {
         measureHeader();
-        // 內部像素尺寸要符合 CSS 尺寸（扣掉 header 区域）
         W = c.width = Math.floor(window.innerWidth * DPR);
         H = c.height = Math.floor((window.innerHeight - headerPx) * DPR);
-        // 調整粒子數與連線距離（隨視窗大小變化）
+
         const count = Math.min(200, Math.floor((W * H) / (14000 * DPR)));
         maxDist = Math.max(90 * DPR, Math.min(160 * DPR, Math.sqrt(W * H) / 28));
 
@@ -97,7 +93,7 @@
           ctx.fill();
         }
 
-        // 近距離連線
+        // 連線
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const a = particles[i], b = particles[j];
@@ -129,7 +125,6 @@
       }
 
       window.addEventListener('resize', resize);
-      // 在字體載入或 DOM 變更後再測一次 header 高度
       window.addEventListener('load', resize);
       const ro = new ResizeObserver(resize);
       ro.observe(header);
