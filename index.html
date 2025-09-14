@@ -4,29 +4,30 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>My Queen’s Student Page</title>
-    <link rel="stylesheet" href="style.css"/> <!-- 請保留這行 -->
+    <meta name="description" content="Hengyi Dong — Queen’s School of Computing student page">
+    <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
-    <canvas id="bg"></canvas>
-    <header>
-      <h1>Welcome to Hengyi's Blog</h1> <!-- 可以改成你的名字 -->
+    <!-- 固定在最上方的 Header（粒子不能覆蓋這裡） -->
+    <header id="site-header">
+      <h1>Welcome to Hengyi's Blog</h1>
     </header>
 
+    <!-- 粒子背景畫布：放在 header 之後，因此不會出現在 header 上方 -->
+    <canvas id="bg"></canvas>
+
+    <!-- 內容卡片 -->
     <main>
-      <!-- ====== ABOUT SECTION ====== -->
       <section>
         <h2>About Me</h2>
         <p>
-          I am a student at the Queen’s School of Computing with interests in 
-          Photography, Blender, Economics, small form factor PCs (Mini-ITX), and 
-          East Asian Literature..
+          I am a student at the Queen’s School of Computing with interests in
+          Photography, Blender, Economics, small form factor PCs (Mini-ITX), and
+          East Asian Literature.
         </p>
-
-        <!-- 建議：如果你想要這張照片佔滿卡片上方，可以加 class="hero" -->
-        <img src="me.jpeg" alt="My portrait" class="hero" />
+        <img src="me.jpeg" alt="My portrait" class="hero" loading="lazy"/>
       </section>
 
-      <!-- ====== PROJECTS/COURSES ====== -->
       <section>
         <h2>Projects</h2>
         <ul>
@@ -35,103 +36,111 @@
         </ul>
       </section>
 
-      <!-- ====== CONTACT ====== -->
       <section>
         <h2>Contact</h2>
         <p>Email: <a href="mailto:hengyi.dong@queensu.ca">hengyi.dong@queensu.ca</a></p>
         <p>LinkedIn: <a href="#">To be Announced</a></p>
       </section>
     </main>
-      <script>
-(() => {
-  const c = document.getElementById('bg');
-  const ctx = c.getContext('2d');
 
-  // 顏色沿用你的主題色
-  const BLUE = getComputedStyle(document.documentElement).getPropertyValue('--blue')?.trim() || '#002d72';
-  const GOLD = getComputedStyle(document.documentElement).getPropertyValue('--gold')?.trim() || '#f2a900';
+    <!-- 粒子網腳本（只在 header 下方繪製） -->
+    <script>
+    (() => {
+      const header = document.getElementById('site-header');
+      const c = document.getElementById('bg');
+      const ctx = c.getContext('2d');
+      const root = document.documentElement;
 
-  let W, H, particles, maxDist;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      // 讀取主題色
+      const BLUE = getComputedStyle(root).getPropertyValue('--blue').trim() || '#002d72';
+      const GOLD = getComputedStyle(root).getPropertyValue('--gold').trim() || '#f2a900';
 
-  function resize() {
-    W = c.width = Math.floor(window.innerWidth * DPR);
-    H = c.height = Math.floor(window.innerHeight * DPR);
-    c.style.width = '100vw';
-    c.style.height = '100vh';
+      let W, H, particles, maxDist, headerPx;
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
-    // 依視窗大小調整密度
-    const count = Math.min(160, Math.floor((W * H) / (14000 * DPR)));
-    maxDist = Math.max(80 * DPR, Math.min(140 * DPR, Math.sqrt(W * H) / 30));
-
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * (0.4 * DPR),
-      vy: (Math.random() - 0.5) * (0.4 * DPR),
-      r: 1.6 * DPR
-    }));
-  }
-
-  function step() {
-    ctx.clearRect(0, 0, W, H);
-
-    // 畫粒子
-    ctx.fillStyle = 'rgba(255,255,255,.85)';
-    for (const p of particles) {
-      p.x += p.vx; p.y += p.vy;
-
-      // 邊界反彈
-      if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // 連線（近距離才畫，並做透明度衰減）
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < maxDist * maxDist) {
-          const t = 1 - Math.sqrt(d2) / maxDist; // 接近越亮
-          // 使用藍→金的漸層線
-          const gx = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-          gx.addColorStop(0, BLUE);
-          gx.addColorStop(1, GOLD);
-          ctx.strokeStyle = gx;
-          ctx.globalAlpha = 0.18 * t;   // 透明度
-          ctx.lineWidth = Math.max(0.6 * DPR, 1.2 * t * DPR);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
+      function measureHeader() {
+        // 以實際渲染高度為準（避免斷行導致高度變動）
+        headerPx = Math.ceil(header.getBoundingClientRect().height);
+        // 通知 CSS 設定 canvas 的 top 與高度
+        root.style.setProperty('--header-h', headerPx + 'px');
       }
-    }
 
-    requestAnimationFrame(step);
-  }
+      function resize() {
+        measureHeader();
+        // 內部像素尺寸要符合 CSS 尺寸（扣掉 header 区域）
+        W = c.width = Math.floor(window.innerWidth * DPR);
+        H = c.height = Math.floor((window.innerHeight - headerPx) * DPR);
+        // 調整粒子數與連線距離（隨視窗大小變化）
+        const count = Math.min(200, Math.floor((W * H) / (14000 * DPR)));
+        maxDist = Math.max(90 * DPR, Math.min(160 * DPR, Math.sqrt(W * H) / 28));
 
-  // 停止動畫給 prefers-reduced-motion
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  function start() {
-    if (!reduced.matches) requestAnimationFrame(step);
-  }
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * (0.4 * DPR),
+          vy: (Math.random() - 0.5) * (0.4 * DPR),
+          r: 1.6 * DPR
+        }));
+      }
 
-  window.addEventListener('resize', resize);
-  resize();
-  start();
+      function step() {
+        ctx.clearRect(0, 0, W, H);
 
-  // Tab 切換節能
-  document.addEventListener('visibilitychange', () => {
-    if (!reduced.matches && document.visibilityState === 'visible') requestAnimationFrame(step);
-  });
-})();
-</script>
+        // 粒子
+        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        for (const p of particles) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // 近距離連線
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i], b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < maxDist * maxDist) {
+              const t = 1 - Math.sqrt(d2) / maxDist;
+              const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+              g.addColorStop(0, BLUE);
+              g.addColorStop(1, GOLD);
+              ctx.strokeStyle = g;
+              ctx.globalAlpha = 0.18 * t;
+              ctx.lineWidth = Math.max(0.6 * DPR, 1.2 * t * DPR);
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      function start() {
+        if (!reduced.matches) requestAnimationFrame(step);
+      }
+
+      window.addEventListener('resize', resize);
+      // 在字體載入或 DOM 變更後再測一次 header 高度
+      window.addEventListener('load', resize);
+      const ro = new ResizeObserver(resize);
+      ro.observe(header);
+
+      resize();
+      start();
+
+      document.addEventListener('visibilitychange', () => {
+        if (!reduced.matches && document.visibilityState === 'visible') requestAnimationFrame(step);
+      });
+    })();
+    </script>
   </body>
 </html>
