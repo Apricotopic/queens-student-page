@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>My Queen’s Student Page</title>
     <meta name="description" content="Hengyi Dong — Queen’s School of Computing student page">
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="style.css?v=5"/>
   </head>
   <body>
-    <!-- 固定在最上方的 Header（粒子不覆蓋這裡） -->
+    <!-- Header 固定在最上方，粒子不覆蓋 -->
     <header id="site-header">
       <h1>Welcome to Hengyi's Blog</h1>
     </header>
 
-    <!-- 粒子背景畫布（僅在 header 下方運行） -->
+    <!-- 粒子背景 -->
     <canvas id="bg"></canvas>
 
     <main>
@@ -24,7 +24,6 @@
           Photography, Blender, Economics, small form factor PCs (Mini-ITX), and
           East Asian Literature.
         </p>
-        <!-- 重要：不再使用 class="hero"，避免裁切 -->
         <img src="me.jpeg" alt="My portrait" loading="lazy"/>
       </section>
 
@@ -43,7 +42,7 @@
       </section>
     </main>
 
-    <!-- 粒子網腳本（畫布高度=視窗高度−header 高度） -->
+    <!-- 粒子動畫 -->
     <script>
     (() => {
       const header = document.getElementById('site-header');
@@ -51,7 +50,7 @@
       const ctx = c.getContext('2d');
       const root = document.documentElement;
 
-      const BLUE = getComputedStyle(root).getPropertyValue('--blue').trim() || '#002d72';
+      // 統一使用 Queen's 黃色
       const GOLD = getComputedStyle(root).getPropertyValue('--gold').trim() || '#f2a900';
 
       let W, H, particles, maxDist, headerPx;
@@ -82,8 +81,8 @@
       function step() {
         ctx.clearRect(0, 0, W, H);
 
-        // 粒子
-        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        // 顆粒 = 黃色
+        ctx.fillStyle = GOLD;
         for (const p of particles) {
           p.x += p.vx; p.y += p.vy;
           if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -93,19 +92,16 @@
           ctx.fill();
         }
 
-        // 連線
+        // 連線 = 黃色（透明度衰減）
+        ctx.strokeStyle = GOLD;
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const a = particles[i], b = particles[j];
             const dx = a.x - b.x, dy = a.y - b.y;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < maxDist * maxDist) {
+            const d2 = dx*dx + dy*dy;
+            if (d2 < maxDist*maxDist) {
               const t = 1 - Math.sqrt(d2) / maxDist;
-              const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-              g.addColorStop(0, BLUE);
-              g.addColorStop(1, GOLD);
-              ctx.strokeStyle = g;
-              ctx.globalAlpha = 0.18 * t;
+              ctx.globalAlpha = 0.25 * t;
               ctx.lineWidth = Math.max(0.6 * DPR, 1.2 * t * DPR);
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
@@ -120,17 +116,14 @@
       }
 
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-      function start() {
-        if (!reduced.matches) requestAnimationFrame(step);
-      }
+      function start(){ if (!reduced.matches) requestAnimationFrame(step); }
 
       window.addEventListener('resize', resize);
       window.addEventListener('load', resize);
       const ro = new ResizeObserver(resize);
       ro.observe(header);
 
-      resize();
-      start();
+      resize(); start();
 
       document.addEventListener('visibilitychange', () => {
         if (!reduced.matches && document.visibilityState === 'visible') requestAnimationFrame(step);
