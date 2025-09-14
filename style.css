@@ -1,15 +1,15 @@
 /* ===== Theme & Reset ===== */
 :root{
   --red:#aa1e22;
-  --gold:#f2a900;          /* Queen's Yellow */
-  --navy:#141c3f;          /* header bar 顏色 */
+  --gold:#f2a900;      /* Queen's Yellow */
+  --navy:#141c3f;      /* header bar 顏色 */
   --blue:#002d72;
   --ink:#1a1a1a;
   --ink-2:#333;
   --bg:#fff;
   --card-radius:14px;
   --shadow:0 8px 28px rgba(0,0,0,.08);
-  --header-h:0px;          /* JS 寫入 header 真實高度 */
+  --header-h:0px;      /* JS 會寫入實際 header 高度 */
 }
 
 *{ box-sizing:border-box; }
@@ -22,33 +22,43 @@ body{
   line-height:1.6;
 }
 
-/* ===== Header：左右對齊、垂直置中 ===== */
+/* ===== Header：固定高度 + 右側 logo 絕對定位 ===== */
 header{
   position:sticky; top:0; z-index:4;
   background:var(--navy);
   color:#fff;
 
-  min-height:64px;
+  height:72px;           /* 固定高度，避免忽高忽低 */
   padding:0 1.25rem;
-
   display:flex;
-  align-items:center;            /* 垂直置中 */
-  justify-content:space-between; /* 左右分散：標題左、logo 右 */
+  align-items:center;    /* 垂直置中文字 */
   box-shadow:var(--shadow);
+
+  position:sticky; top:0;
 }
 header h1{
   margin:0;
   font-size:clamp(1.1rem, 2.2vw + .4rem, 1.6rem);
   line-height:1;
   letter-spacing:.3px;
+
+  /* 預留右側空間，避免被 logo 壓住 */
+  padding-right: 160px;
 }
+
+/* Logo：嚴格貼右、垂直居中，永遠在 bar 上層 */
 header .q-logo{
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
   height:44px;
   width:auto;
   display:block;
   object-fit:contain;
-  margin:0;                      /* 關鍵：不要吃到通用 img 的 margin:auto */
-  align-self:center;
+  margin:0;
+  z-index:5;
+  pointer-events:none; /* 只展示；若需點擊，刪掉這行 */
 }
 
 /* ===== 粒子畫布：僅在 header 下方 ===== */
@@ -90,13 +100,13 @@ a{ color:var(--blue); text-decoration:none; }
 a:hover,a:focus{ text-decoration:underline; }
 a:active{ color:#001a42; }
 
-/* ===== 圖片保持原比例（排除 header logo） ===== */
+/* ===== 內容圖片（排除 header logo） ===== */
 img:not(.q-logo){
   width:auto;
   max-width:100%;
   height:auto;
   display:block;
-  margin:1rem auto;              /* 只讓內容圖片置中 */
+  margin:1rem auto;
   border-radius:12px;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
   aspect-ratio:auto !important;
@@ -109,4 +119,5 @@ section + section{ margin-top:1.25rem; }
 @media (max-width:640px){
   main{ margin:1rem .75rem; padding:1rem; }
   header .q-logo{ height:38px; }
+  header h1{ padding-right: 132px; } /* 行動裝置預留空間略縮 */
 }
