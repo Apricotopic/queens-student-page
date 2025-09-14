@@ -1,14 +1,14 @@
 /* ===== Theme & Reset ===== */
 :root{
   --red:#aa1e22;
-  --gold:#f2a900;
+  --gold:#f2a900; /* Queen's Yellow */
   --blue:#002d72;
   --ink:#1a1a1a;
   --ink-2:#333;
   --bg:#fff;
   --card-radius:14px;
   --shadow:0 8px 28px rgba(0,0,0,.08);
-  --header-h:0px; /* JS 會寫入實際 header 高度 */
+  --header-h:0px;
 }
 
 *{ box-sizing:border-box; }
@@ -21,15 +21,13 @@ body{
   line-height:1.6;
 }
 
-/* Header 不透明，完整遮住上方粒子 */
+/* Header */
 header{
   background:var(--blue);
   color:#fff;
   padding:1.25rem 1rem;
   box-shadow:var(--shadow);
-  position:sticky; /* 需固定可留；想純靜態可改回 static */
-  top:0;
-  z-index:3;
+  position:sticky; top:0; z-index:3;
 }
 header h1{
   margin:0;
@@ -37,7 +35,7 @@ header h1{
   letter-spacing:.3px;
 }
 
-/* 只在 header 下方繪製的粒子畫布 */
+/* 粒子背景：只在 header 下方 */
 #bg{
   position:fixed;
   left:0;
@@ -57,11 +55,10 @@ main{
   border-radius:var(--card-radius);
   padding:1.5rem;
   box-shadow:var(--shadow);
-  position:relative;
-  z-index:2;
+  position:relative; z-index:2;
 }
 
-/* 排版 */
+/* Typography */
 p{ margin:.6rem 0 1rem; color:var(--ink-2); }
 h2{
   color:var(--blue);
@@ -72,32 +69,29 @@ h2{
 ul{ padding-left:1.25rem; margin:.25rem 0 1rem; }
 li{ margin:.35rem 0; }
 
-/* 連結 */
+/* Links */
 a{ color:var(--blue); text-decoration:none; }
 a:hover,a:focus{ text-decoration:underline; }
 a:active{ color:#001a42; }
 
-/* 圖片：完整顯示、不裁切 */
+/* 圖片保持原比例 */
 img{
+  width:auto;
   max-width:100%;
-  height:auto;         /* 等比例縮放 */
+  height:auto;
   display:block;
   margin:1rem auto;
   border-radius:12px;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
+  aspect-ratio:auto !important;
+  object-fit:contain !important;
+  object-position:center center !important;
 }
 
-/* 區塊間距 */
+/* Section spacing */
 section + section{ margin-top:1.25rem; }
 
-/* 小裝飾 */
-mark{
-  background:linear-gradient(transparent 60%, rgba(242,169,0,.35) 0);
-  padding:0 .05em;
-  border-radius:2px;
-}
-
-/* RWD 微調 */
+/* RWD */
 @media (max-width:640px){
   main{ margin:1rem .75rem; padding:1rem; }
 }
